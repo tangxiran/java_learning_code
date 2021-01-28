@@ -1,0 +1,41 @@
+class vampire_number{
+    String[] turn_numberinto(int number ){
+        String origin = String.valueOf(number);
+        String[] sp = null;
+        sp = origin.split("");
+        java.util.Arrays.sort(sp);
+        return sp;
+    }
+    boolean judge(int numb){
+        String[] arr1=turn_numberinto(numb);
+
+        for (int i=10;i<=99;i++) {
+            for (int j=10;j<=99;j++){
+                if (i*j<1000 || i*j>9999) {
+                    continue;
+                }
+                if(i*j==numb){
+                    String arr2 = (String.valueOf(i))+(String.valueOf(j));
+                    String[] arr2_list = arr2.split("");
+                    java.util.Arrays.sort(arr2_list);
+                    if(java.util.Arrays.equals(arr1,arr2_list)){
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+    }
+    
+    
+    
+    另外一个
+    for(int num1 = 10; num1 <= 99; num1++)
+for(int num2 = num1; num2 <= 99; num2++) {
+// Pete Hartley's theoretical result:
+// If x·y is a vampire number then
+// x·y == x+y (mod 9)
+if((num1 * num2) % 9 != (num1 + num2) % 9)
+continue;
