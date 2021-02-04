@@ -1,0 +1,87 @@
+public class ProduceTest {
+    public static void main(String[] args) {
+        Clerk clerk = new Clerk();
+        Producer producer = new Producer(clerk);
+        Comsumer comsumer = new Comsumer(clerk);
+        Comsumer comsumer2 = new Comsumer(clerk);
+        producer.start();
+        comsumer.start();
+        comsumer2.start();
+        
+    }
+}
+
+class Producer extends  Thread{//生产者
+    private Clerk clerk;
+
+    public Producer(Clerk clerk) {
+        this.clerk = clerk;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(getName()+"：生产者,开始生产");
+        while (true) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            clerk.produceProduct();
+        }
+    }
+}
+class Comsumer extends  Thread{//消费者
+    private Clerk clerk;
+
+    public Comsumer(Clerk clerk) {
+        this.clerk = clerk;
+    }
+
+    @Override
+    public void run() {
+        System.out.println(getName()+"：消费者,开始消费");
+        while (true) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            clerk.consumeProduct();
+        }
+    }
+}
+
+class Clerk {//店员
+    //    生产消费
+    private int num = 0;
+    public synchronized void produceProduct() {
+        if (num < 20) {
+            num++;
+            System.out.println(Thread.currentThread().getName() + ":开始生产第产品:" + num);
+            notify();
+        } else {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public synchronized void consumeProduct() {
+        if (num >0) {
+
+            System.out.println(Thread.currentThread().getName() + ":开始消费第产品:" + num);
+            num--;
+
+            notify();
+        } else {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
