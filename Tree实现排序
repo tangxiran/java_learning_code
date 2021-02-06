@@ -1,0 +1,165 @@
+/**
+ * @Classname Tree_EXER
+ * @Description TODO
+ * @Date 2021/2/6 14:53
+ * @Created by wangxutao
+ 1.定义一个Employee类。↵
+该类包含:private 成员变量name,age,birtlday，其中birthday为
+MyDate 类的对象;↵
+并为每一个属性定义getter, setter方法;
+并重写toString方法输出 name, age, birthday.
+MyDate类包含:↵
+private 成员变量year,month,day;并为每一个属性定义getter, setter 方法;
+创建该类的5个对象，并把这些对象放入TreeSet集合中(下一章:
+TreeSet 需使用泛型来定义)↵
+分别按以下两种方式对集合中的元素进行排序，并遍历输出:↵
+1).使Employee 实现Comparable接口，并按name排序。
+2).创建TreeSet 时传入Comparator对象，按生日日期的先后排序。
+
+ */
+
+import org.junit.Test;
+
+import java.util.*;
+
+public class Tree_EXER {
+    @Test
+    public void test() {
+        Comparator comparator_birthday = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if (o1 instanceof Employee && o2 instanceof Employee) {
+                    Employee e1 = (Employee) o1;
+                    Employee e2 = (Employee) o2;
+                    if (Double.compare(e1.getMydate().getYear(), e2.getMydate().getYear()) != 0) {
+                        return Double.compare(e1.getMydate().getYear(), e2.getMydate().getYear());
+                    } else {
+                        if (Double.compare(e1.getMydate().getMonth(), e2.getMydate().getMonth()) != 0) {
+                            return Double.compare(e1.getMydate().getMonth(), e2.getMydate().getMonth());
+                        } else {
+                            return Double.compare(e1.getMydate().getDay(), e2.getMydate().getDay());
+                        }
+                    }
+
+                }
+
+                throw new RuntimeException("not employee ");
+            }
+        };
+
+        //按照比较器comparator比较的生日信息
+        TreeSet treeSetCompaterCompater = new TreeSet<>(comparator_birthday);
+        treeSetCompaterCompater.add(new Employee("ang", 45, new Mydate(1998, 4, 31)));
+        treeSetCompaterCompater.add(new Employee("bng", 45+1, new Mydate(1997+1, 4, 30)));
+        treeSetCompaterCompater.add(new Employee("cng", 45+1+1, new Mydate(1997-1, 4-1, 3-1)));
+        System.out.println(treeSetCompaterCompater);
+
+        //按照compareable实现类比较name
+        TreeSet treeSet = new TreeSet<>();
+        treeSet.add(new Employee("hng", 45, new Mydate(1997, 4, 3)));
+        treeSet.add(new Employee("bng", 45+1, new Mydate(1997+1, 4-1, 3-1)));
+        treeSet.add(new Employee("cng", 45+1+1, new Mydate(1997+1, 4-1, 3-1)));
+        System.out.println(treeSet);
+
+    }
+}
+
+class Employee implements Comparable{
+    private String name;
+    private int age;
+    private Mydate mydate;
+
+    public Employee(String name, int age, Mydate mydate) {
+        this.name = name;
+        this.age = age;
+        this.mydate = mydate;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Employee) {
+            Employee employee = (Employee) o;
+            return this.name.compareTo(employee.name);
+        }
+        throw new RuntimeException("not same type"
+        );
+    }
+
+
+    public Mydate getMydate() {
+        return mydate;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", mydate=" + mydate
+                ;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Employee employee = (Employee) o;
+
+        if (age != employee.age) return false;
+        if (name != null ? !name.equals(employee.name) : employee.name != null) return false;
+        return mydate != null ? mydate.equals(employee.mydate) : employee.mydate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + age;
+        result = 31 * result + (mydate != null ? mydate.hashCode() : 0);
+        return result;
+    }
+}
+
+
+class Mydate{
+    int year,month, day;
+
+    public Mydate(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "year=" + year +
+                ", month=" + month +
+                ", day=" + day
+                ;
+    }
+}
